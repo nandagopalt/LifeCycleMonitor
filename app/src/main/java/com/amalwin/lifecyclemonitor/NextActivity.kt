@@ -4,6 +4,12 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.LifecycleCoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 class NextActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,6 +19,19 @@ class NextActivity : AppCompatActivity() {
         val name = intent.getStringExtra("NAME")
         name.let {
             Log.i(AppConstants.TAG, "Name : it")
+        }
+
+        val flow = flow<String> {
+            for(i in 1..10) {
+                emit("Hello World!")
+                delay(1000L)
+            }
+        }
+
+        GlobalScope.launch {
+            flow.collect() {
+                println("Welcome $it")
+            }
         }
     }
 
