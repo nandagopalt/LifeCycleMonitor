@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainActivityViewModel: MainActivityViewModel
 
     private val viewModel: MainActivityViewModel by viewModels()
-    
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,24 +56,32 @@ class MainActivity : AppCompatActivity() {
                 println(it)
             })
 
+            /*lifecycleScope.launchWhenStarted {
+                mainActivityViewModel.countStateFlow.collect() {
+                    println(it)
+                }
+            }*/
+
+
             lifecycleScope.launchWhenStarted {
                 println("Thread execution from lifecycleScope is ${Thread.currentThread().name}")
                 launch(Dispatchers.IO) {
                     println("Thread execution from launch from lifecycleScope is ${Thread.currentThread().name}")
                     mainActivityViewModel.incrementCount()
+                    //mainActivityViewModel.incrementFlowCount()
                 }
             }
         }
 
-        val flow = flow {
+        /*val flow = flow {
             println("Thread running from producer side : ${Thread.currentThread().name}")
             for (i in 1..10) {
                 emit(i)
                 delay(1000L)
             }
-        }
+        }*/
 
-        lifecycleScope.launchWhenStarted {
+        /*lifecycleScope.launchWhenStarted {
             println("Thread running from receiver/consumer side : ${Thread.currentThread().name}")
             flow.buffer().filter {
                 it % 2 == 0
@@ -83,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 println(it)
                 delay(2000L)
             }
-        }
+        }*/
 
     }
 
